@@ -21,7 +21,6 @@ let db = new sqlite3.Database("db/better_interviews.db", (err) => {
 
 app.post("/login", (req, res) => {
     const userId = parseInt(req.body.userId, 10); // Get the ID from the form
-    console.log("User ID submitted:", userId);
 
     // Check if the ID exists in the database
     checkIdInDatabase(userId, (err, exists) => {
@@ -93,6 +92,42 @@ function getTotalInterviews(callback) {
             callback(err, null); // Pass the error to the callback
         } else {
             callback(null, row ? row.totalInterviews : 0); // Pass the total interviews or 0 if none found
+        }
+    });
+}
+
+app.get("/api/interviewsByGenre", (req, res) => {
+    if (currentUserId === null) {
+        return res.status(400).json({ error: "No user logged in" });
+    }
+
+    const interviewType = req.query.interviewType; // Extract the query parameter
+
+    getInterviews(interviewType, (err, interviews) => {
+        if (err) {
+            console.error(`Error fetching ${interviewType} interviews:`, err.message);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json({ interviews }); // Send the list of interviews as JSON
+        }
+    });
+});
+
+function getInterviews(interviewType, callback) {
+    const query = `
+        SELECT interviews.company_name
+        FROM interviews
+        JOIN users ON interviews.user_id = users.id
+        WHERE users.id = ? AND interviews.status = ?;
+    `;
+
+    db.all(query, [currentUserId, interviewType], (err, rows) => {
+        if (err) {
+            console.error(`Error getting ${interviewType} interviews:`, err.message);
+            callback(err, null);
+        } else {
+            const interviewNames = rows.map(row => row.company_name); // Extract company names
+            callback(null, interviewNames);
         }
     });
 }

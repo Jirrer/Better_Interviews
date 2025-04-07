@@ -122,14 +122,23 @@ body {
     font-family: Inter;
 }
 
+
+
+button {
+    all: unset; /* Resets all inherited and default styles */
+}
+
 #Pending_Label {
+    cursor: pointer; 
     border-radius: 70.5px;
     width: 33.33%;
     background-color: #D9D9D9;
     color: #3597C8;
+
 }
 
 #Offered_Label {
+    cursor: pointer; 
     border-radius: 70.5px;
     width: 33.33%;
     background-color: #D9D9D9;
@@ -137,6 +146,7 @@ body {
 }
 
 #Rejected_Label {
+    cursor: pointer; 
     border-radius: 70.5px;
     width: 33.33%;
     background-color: #D9D9D9;
@@ -161,4 +171,12 @@ body {
     margin-left: 7%;
     height: 100vh;
 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#offersDate {
+    text-align: end;
+    font-size: 20px;
+    margin-top: 10px;
 }
