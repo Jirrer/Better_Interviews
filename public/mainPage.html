@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Interviews</title>
+    <link rel = "stylesheet" href = "styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id = "Top_Bar">
+        <p></p>
+        <div id = "Options"><img src="svg/options.svg"width="30" height="30"></div>
+        <div id = "Settings"><img src="svg/settings.svg"width="30" height="30"></div>
+        <div id = "Calender"><img src="svg/calendar.svg"width="30" height="30"></div>
+    </div>
+    <div id = "Add_Interview">
+        <input type="text" placeholder="Add Interview">
+        <img src="svg/add.svg"width="40" hieght ="40">
+    </div>
+    <div id = "Display_TimeFrame"><p>time frame</p></div>
+    <div class = "Percent_Charts" id = "Pending_Container">
+        <p id = "Pending_Value">0</p>
+        <hr>
+        <p class = "Total_Interviews">0</p>
+    </div>  
+    <div class = "Percent_Charts" id = "Offered_Container">
+        <p id = "Offered_Value"></p>
+        <hr>
+        <p class = "Total_Interviews">0</p>
+    </div> 
+    <div class = "Percent_Charts" id = "Rejected_Container">
+        <p id = "Rejected_Value">0</p>
+        <hr>
+        <p class = "Total_Interviews">0</p>
+    </div>
+    <div id = "Labels">
+        <div id = "Pending_Label"><p>Pending</p></div>
+        <div id = "Offered_Label"><p>Offered</p></div>
+        <div id = "Rejected_Label"><p>Rejected</p></div>
+    </div>
+    <script src = "script.js"></script>
+</body>
+<!-- <div id = "Side_Panel"><p>side panel</p></div> -->
+</html>

@@ -10,7 +10,7 @@ body {
 
 
 #Top_Bar {
-    grid-column: 1 / -1;
+    grid-column: span 2;
     display: flex; 
     flex-direction: row; 
     align-items: center; 
@@ -21,8 +21,25 @@ body {
     margin-top: 2px;
 }
 
-#Side_Panel {
 
+#Add_Interview {
+    grid-column: 3;
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    justify-self: end;
+    margin-right: 2px;
+}
+
+#Add_Interview input {
+    margin: auto;
+    font-size: 24px;
+    font-family: 'Inter';
+    font-weight: 100;
+}
+
+#Side_Panel {
+    
     
     background-color: aqua;
 }
@@ -61,7 +78,7 @@ body {
     height: 3px;           /* Line thickness */
     background-color: black; /* Line color */
     width: 25%;            /* Line width */
-
+    
 }
 
 #Pending_Container {
@@ -124,4 +141,24 @@ body {
     width: 33.33%;
     background-color: #D9D9D9;
     color: #D81E1E;
+}
+
+#InterviewPage_TopBar {
+    font-family: 'Inter';
+    font-weight: 100;
+    font-size: 48px;
+    margin-left: 5px;
+    grid-column: 1 / -1;
+
+}
+
+#Interview_Space {
+    grid-column: 1 / -1;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
+    margin-right: 7%;
+    margin-left: 7%;
+    height: 100vh;
+
 }
