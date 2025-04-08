@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel = "stylesheet" href = "styles.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="userId">Enter your ID:</label>
-        <input type="number" id="userId" name="userId" required>
-        <button type="submit">Login</button>
-    </form>
+    <div id = "Login_Page">
+        <div id = "Action_Select">
+            <button type="button">Login</button>
+            <p> | </p>
+            <button type="button">Sign-up</button>
+        </div>
+        <form action="/login" method="POST">
+            <input type="text" id="userId" name="userId" placeholder=" Username" required style="border-radius: 25px; height: 40px;">
+            <input type="text" id="passwordId" name="passwordId" placeholder=" Password" required style="border-radius: 25px; height: 40px;">
+            <button type="submit" style="font-size: 35px; margin-top: 15px;">Login</button>
+        </form>
+    </div>
+
+
 </body>
 </html>
