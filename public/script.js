@@ -156,11 +156,11 @@ async function fetchCountsForStatus() {
 
 
 async function updateOffers() {
-    const container = document.getElementById('Offers'); // Get the div with ID 'Offers'
+    const companyContainer = document.getElementById('Offers'); // Container for company names
+    const dateContainer = document.getElementById('OffersDate'); // Container for dates
 
-    if (container) {
+    if (companyContainer && dateContainer) {
         try {
-            // Fetch the names of "Offered" interviews
             const interviewType = "Offered";
             const response = await fetch(`/api/interviewsByGenre?interviewType=${interviewType}`);
             if (!response.ok) {
@@ -168,27 +168,38 @@ async function updateOffers() {
             }
 
             const data = await response.json(); // Parse the JSON response
-            const offerNames = data.interviews; // Extract the list of interview names
+            const interviews = data.interviews; // Extract the list of interviews
 
-            // Update the content of the container with the fetched data
-            if (offerNames.length > 0) {
-                container.innerHTML = `<ul>${offerNames.map(name => `<li>${name}</li>`).join('')}</ul>`;
+            // Update the content of the containers with the fetched data
+            if (interviews.length > 0) {
+                // Populate company names
+                companyContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.companyName}</li>`)
+                    .join('')}</ul>`;
+
+                // Populate dates
+                dateContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.date}</li>`)
+                    .join('')}</ul>`;
             } else {
-                container.textContent = "No offers available.";
+                companyContainer.textContent = "No offers available.";
+                dateContainer.textContent = "No dates available.";
             }
         } catch (error) {
             console.error("Error updating offers:", error);
-            container.textContent = "Error fetching offers"; // Display an error message in the div
+            companyContainer.textContent = "Error fetching offers"; // Display an error message in the company container
+            dateContainer.textContent = "Error fetching dates"; // Display an error message in the date container
         }
     } else {
-        console.error("Offers container not found in the DOM.");
+        console.error("One or both containers not found in the DOM.");
     }
 }
 
 async function updateRejects() {
-    const container = document.getElementById('Rejects'); // Get the div with ID 'Offers'
+    const companyContainer = document.getElementById('Rejects'); 
+    const dateContainer = document.getElementById('RejectedDate'); 
 
-    if (container) {
+    if (companyContainer && dateContainer) {
         try {
             // Fetch the names of "Offered" interviews
             const interviewType = "Rejected";
@@ -198,17 +209,24 @@ async function updateRejects() {
             }
 
             const data = await response.json(); // Parse the JSON response
-            const rejectNames = data.interviews; // Extract the list of interview names
+            const interviews = data.interviews; // Extract the list of interview names
 
             // Update the content of the container with the fetched data
-            if (rejectNames.length > 0) {
-                container.innerHTML = `<ul>${rejectNames.map(name => `<li>${name}</li>`).join('')}</ul>`;
+            if (interviews.length > 0) {
+                companyContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.companyName}</li>`)
+                    .join('')}</ul>`;
+
+                // Populate dates
+                dateContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.date}</li>`)
+                    .join('')}</ul>`;
             } else {
                 container.textContent = "No offers available.";
             }
         } catch (error) {
             console.error("Error updating rejects:", error);
-            container.textContent = "Error fetching offers"; // Display an error message in the div
+            container.textContent = "Error fetching rejects"; 
         }
     } else {
         console.error("Reject container not found in the DOM.");
@@ -216,9 +234,10 @@ async function updateRejects() {
 }
 
 async function updatePending() {
-    const container = document.getElementById('Pending'); // Get the div with ID 'Offers'
+    const companyContainer = document.getElementById('Pending');
+    const dateContainer = document.getElementById('PendingDate'); 
 
-    if (container) {
+    if (companyContainer && dateContainer) {
         try {
             // Fetch the names of "Offered" interviews
             const interviewType = "Pending";
@@ -228,18 +247,25 @@ async function updatePending() {
             }
 
             const data = await response.json(); // Parse the JSON response
-            const pendingNames = data.interviews; // Extract the list of interview names
+            const interviews = data.interviews; // Extract the list of interview names
 
 
             // Update the content of the container with the fetched data
-            if (pendingNames.length > 0) {
-                container.innerHTML = `<ul>${pendingNames.map(name => `<li>${name}</li>`).join('')}</ul>`;
+            if (interviews.length > 0) {
+                companyContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.companyName}</li>`)
+                    .join('')}</ul>`;
+
+                // Populate dates
+                dateContainer.innerHTML = `<ul>${interviews
+                    .map(interview => `<li>${interview.date}</li>`)
+                    .join('')}</ul>`;
             } else {
                 container.textContent = "No offers available.";
             }
         } catch (error) {
             console.error("Error updating pending:", error);
-            container.textContent = "Error fetching offers"; // Display an error message in the div
+            container.textContent = "Error fetching pending"; // Display an error message in the div
         }
     } else {
         console.error("Pending container not found in the DOM.");

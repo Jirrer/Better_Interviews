@@ -222,8 +222,16 @@ button {
     grid-template-columns: repeat(2, 1fr);
 }
 
-#offersDate {
+#Offers, #Pending, #Rejects {
+    font-size: 20px;
+}
+
+#OffersDate, #PendingDate, #RejectedDate {
     text-align: end;
     font-size: 20px;
-    margin-top: 10px;
+}
+
+#OffersDate ul, #PendingDate ul, #RejectedDate ul {
+    list-style-type: none; /* Removes the bullet points */
+    margin-right: 5px;
 }

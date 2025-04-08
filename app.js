@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 const sqlite3 = require('sqlite3').verbose();
+const { spawn } = require("child_process");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -95,9 +96,9 @@ function getTotalInterviews(callback) {
     db.get(query, [currentUserId], (err, row) => {
         if (err) {
             console.error("Error getting total interviews:", err.message);
-            callback(err, null); // Pass the error to the callback
+            callback(err, null); 
         } else {
-            callback(null, row ? row.totalInterviews : 0); // Pass the total interviews or 0 if none found
+            callback(null, row ? row.totalInterviews : 0); 
         }
     });
 }
@@ -107,21 +108,21 @@ app.get("/api/interviewsByGenre", (req, res) => {
         return res.status(400).json({ error: "No user logged in" });
     }
 
-    const interviewType = req.query.interviewType; // Extract the query parameter
-
+    const interviewType = req.query.interviewType; 
     getInterviews(interviewType, (err, interviews) => {
         if (err) {
             console.error(`Error fetching ${interviewType} interviews:`, err.message);
             res.status(500).json({ error: "Internal Server Error" });
         } else {
-            res.json({ interviews }); // Send the list of interviews as JSON
+            res.json({ interviews }); 
         }
     });
 });
 
+
 function getInterviews(interviewType, callback) {
     const query = `
-        SELECT interviews.company_name
+        SELECT interviews.company_name, interviews.date
         FROM interviews
         JOIN users ON interviews.user_id = users.id
         WHERE users.id = ? AND interviews.status = ?;
@@ -132,12 +133,14 @@ function getInterviews(interviewType, callback) {
             console.error(`Error getting ${interviewType} interviews:`, err.message);
             callback(err, null);
         } else {
-            const interviewNames = rows.map(row => row.company_name); // Extract company names
-            callback(null, interviewNames);
+            const interviews = rows.map(row => ({
+                companyName: row.company_name,
+                date: row.date
+            }));
+            callback(null, interviews);
         }
     });
 }
-
 
 
 
