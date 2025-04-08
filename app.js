@@ -20,23 +20,43 @@ let db = new sqlite3.Database("db/better_interviews.db", (err) => {
 });
 
 app.post("/login", (req, res) => {
-    const userId = parseInt(req.body.userId, 10); // Get the ID from the form
+    const username = req.body.username; 
+    const password = req.body.password;
 
-    // Check if the ID exists in the database
-    checkIdInDatabase(userId, (err, exists) => {
+    checkForId(username, password, (err, isValid) => {
         if (err) {
             console.error("Error:", err.message);
             res.status(500).send("Internal Server Error");
-        } else if (exists) {
-            console.log("ID exists in the database.");
-            currentUserId = userId;
+        } else if (isValid) {
+            console.log("Username exists in the database.");
+            currentUserId = isValid;
             res.redirect("/mainPage.html"); 
         } else {
-            console.log("ID does not exist in the database.");
+            console.log("Invalid username or password.");
             res.sendFile(__dirname + "/public/index.html");
         }
     });
 });
+
+function checkForId(username, password, callback) {
+    const query = "SELECT id, password FROM users WHERE username = ?";
+
+    db.get(query, [username], (err, row) => {
+        if (err) {
+            console.error("Error querying the database:", err.message);
+            callback(err, null);
+        } else if (row) {
+            if (row.password === password) {
+                callback(null, row.id); // Return the user ID if valid
+            } else {
+                callback(null, false); // Invalid password
+            }
+        } else {
+            callback(null, false);
+        }
+    });
+}
+
 
 app.get("/api/user-id", (req, res) => {
     if (currentUserId !== null) {
@@ -47,21 +67,7 @@ app.get("/api/user-id", (req, res) => {
 });
 
 
-function checkIdInDatabase(id, callback) {
-    const query = "SELECT * FROM users WHERE id = ?"; 
-    db.get(query, [id], (err, row) => {
-        if (err) {
-            console.error('Error querying the database:', err.message);
-            callback(err, null);
-        } else {
-            if (row) {
-                callback(null, true); 
-            } else {
-                callback(null, false); 
-            }
-        }
-    });
-}
+
 
 app.get("/api/total-interviews", (req, res) => {
     if (currentUserId === null) {
