@@ -6,18 +6,48 @@ let OfferCount = 0;
 let PendingCount = 0;
 let RejectedCount = 0;
 
-function handlePendingClick() {
+function GoHome() {
+    window.location.href = "/../mainPage.html"
+}
+
+function GoToPending() {
     window.location.href = "/pendingPage.html";
 }
 
-function handleOfferedClick() {
+function GoToOffered() {
     window.location.href = "/offeredPage.html";
 
 }
 
-function handleRejectedClick() {
+function GoToRejected() {
     window.location.href = "/rejectedPage.html";
 }
+
+function GoToNewInterview() {
+    window.location.href = "/newInterview.html";
+}
+
+function addInterview() {
+    const inputField = document.getElementById("interviewName"); 
+    const interviewName = inputField.value.trim();
+    
+    if (interviewName) {
+        localStorage.setItem('interviewName', interviewName); 
+        GoToNewInterview(); 
+    } else {
+        console.error("Input is empty. Please enter a valid interview name.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const interviewName = localStorage.getItem('interviewName'); 
+    if (interviewName) {
+        const container = document.getElementById('interview_name');
+        container.innerHTML = interviewName; 
+    } else {
+        console.error("No interview name found in localStorage.");
+    }
+});
 
 fetch("/api/user-id")
     .then((response) => response.json())

@@ -10,13 +10,21 @@
 <body>
     <div id = "Top_Bar">
         <p></p>
-        <div id = "Options"><img src="svg/options.svg"width="30" height="30"></div>
-        <div id = "Settings"><img src="svg/settings.svg"width="30" height="30"></div>
-        <div id = "Calender"><img src="svg/calendar.svg"width="30" height="30"></div>
+        <button type="button" onclick="toOptions()">
+            <div id = "Options"><img src="svg/options.svg"width="30" height="30"></div>
+        </button>
+        <button type="button" onclick="toSettings()">
+            <div id = "Settings"><img src="svg/settings.svg"width="30" height="30"></div>
+        </button>
+        <button type="button" onclick="toCalender()">
+            <div id = "Calender"><img src="svg/calendar.svg"width="30" height="30"></div>
+        </button>
     </div>
     <div id = "Add_Interview">
-        <input type="text" placeholder="Add Interview">
-        <img src="svg/add.svg"width="40" hieght ="40">
+        <input type="text" id="interviewName" placeholder="Add Interview">
+        <button type="button" onclick="addInterview()">
+            <img src="svg/add.svg"width="40" hieght ="40">
+        </button>
     </div>
     <div id = "Display_TimeFrame"><p>Last 30 Days</p></div>
     <div class = "Percent_Charts" id = "Pending_Container">
@@ -35,9 +43,9 @@
         <p class = "Total_Interviews">0</p>
     </div>
     <div id = "Labels">
-        <button id="Pending_Label" onclick="handlePendingClick()"><p>Pending</p></button>
-        <button id = "Offered_Label" onclick="handleOfferedClick()"><p>Offered</p></button>
-        <button id = "Rejected_Label" onclick="handleRejectedClick()"><p>Rejected</p></button>
+        <button id="Pending_Label" onclick="GoToPending()"><p>Pending</p></button>
+        <button id = "Offered_Label" onclick="GoToOffered()"><p>Offered</p></button>
+        <button id = "Rejected_Label" onclick="GoToRejected()"><p>Rejected</p></button>
     </div>
     <script src = "script.js"></script>
 </body>

@@ -6,6 +6,11 @@ body {
     grid-template-rows: auto; 
     padding: 0px;
     margin: 0px;
+    font-family: 'Inter';
+}
+
+body button :hover {
+    cursor: pointer;
 }
 
 
@@ -169,8 +174,6 @@ body {
     font-family: Inter;
 }
 
-
-
 button {
     all: unset; /* Resets all inherited and default styles */
 }
@@ -205,9 +208,21 @@ button {
     font-weight: 100;
     font-size: 48px;
     margin-left: 5px;
-    grid-column: 1 / -1;
+    grid-column: 2;
+    text-align: center;
 
 }
+
+#HomeButton {
+    grid-column: 1;
+    align-self: start;
+    padding: 15px;
+}
+
+#HomeButton :hover {
+    cursor: pointer;
+}
+
 
 #Interview_Space {
     grid-column: 1 / -1;
@@ -234,4 +249,24 @@ button {
 #OffersDate ul, #PendingDate ul, #RejectedDate ul {
     list-style-type: none; /* Removes the bullet points */
     margin-right: 5px;
+}
+
+#interview_name {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 48px;
+    font-weight: 100;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+}
+
+#company_info, #job_info, #extra_info, #verify_info, #sumbit_interview {
+    grid-column: 1 / -1;
+    border-top: 2px solid black;
+}
+
+#sumbit_interview {
+    display: flex;
+    flex-direction: row;
 }
