@@ -295,11 +295,66 @@ async function updatePending() {
             }
         } catch (error) {
             console.error("Error updating pending:", error);
-            container.textContent = "Error fetching pending"; // Display an error message in the div
+            container.textContent = "Error fetching pending"; 
         }
     } else {
         console.error("Pending container not found in the DOM.");
+    }  
+}
+
+function submitAllForms() {
+    const companyInfo = {
+        companyName: document.getElementById("companyName").value.trim(),
+        companyLocation: document.getElementById("companyLocation").value.trim() || null, 
+        companyEmail: document.getElementById("companyEmail").value.trim() || null,
+        companyIndustry: document.getElementById("companyIndustry").value.trim() || null,
+    };
+
+    const jobInfo = {
+        jobName: document.getElementById("jobName").value.trim(),
+        jobDate: document.getElementById("jobDate").value.trim(),
+        numInterviewers: document.getElementById("numInterviewers").value.trim() || null,
+        jobTime: document.getElementById("jobTime").value.trim() || null,
+    };
+
+    const extraInfo = {
+        interviewDescription: document.getElementById("interview_description").value.trim(),
+    };
+
+    if (!companyInfo.companyName || !jobInfo.jobName || !jobInfo.jobDate || !extraInfo.interviewDescription) {
+        alert("Please fill in all required fields.");
+        return; 
     }
+
+    const formData = {
+        companyInfo,
+        jobInfo,
+        extraInfo,
+    };
+
+    fetch("/submit", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+    })
+        .then((response) => {
+            if (response.ok) {
+                alert("Interview submitted successfully!");
+                // window.location.href = "/mainPage.html"; //make it open that page
+            } else {
+                alert("Failed to submit the interview. Please try again.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error submitting the form:", error);
+            alert("An error occurred. Please try again.");
+        });
+}
+
+function cancelInterview() {
+    GoHome();
 }
 
 updateCharts();

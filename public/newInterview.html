@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Better Interviews - Add Interview</title>
-    <link rel = "stylesheet" href = "styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id = "interview_name"></div>
-    <form id ="company_info" method="post">
-        company info
+    <div id="interview_name"></div>
+    <form id="company_info">
+        <input type="text" id="companyName" name="companyName" placeholder="Company Name" required>
+        <input type="text" id="companyLocation" name="companyLocation" placeholder="Company Location (optional)">
+        <input type="text" id="companyEmail" name="companyEmail" placeholder="Company Email (optional)">
+        <input type="text" id="companyIndustry" name="companyIndustry" placeholder="Company Industry (optional)">
     </form>
-    <form id ="job_info" method="post">
-        job info
+    <form id="job_info">
+        <input type="text" id="jobName" name="jobName" placeholder="Role Position" required>
+        <input type="date" id="jobDate" name="jobDate" placeholder="Interview Date" required>
+        <input type="number" id="numInterviewers" name="numInterviewers" placeholder="Number of Interviewers (optional)">
+        <input type="number" id="jobTime" name="jobTime" placeholder="Length of Interview (hrs) (optional)">
     </form>
-    <form id ="extra_info" method="post">
-        company info
+    <form id="extra_info">
+        <input type="text" id="interview_description" name="interview_description" placeholder="Interview Description" required>
     </form>
-    <div id ="verify_info" method="post">
-        verify info
-    </div>
-    <div id = "sumbit_interview">
-        <button type="button" id = add_interview>Submit</button>
+    <div id="submit_interview">
+        <button type="button" id="add_interview" onclick="submitAllForms()">Submit</button>
         <p> | </p>
-        <button type="button" id = cancel_interview>Cancel</button>
-
+        <button type="button" id="cancel_interview" onclick="cancelInterview()">Cancel</button>
     </div>
     
     <script src="script.js"></script>

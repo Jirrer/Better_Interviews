@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const PORT = 3000;
 const sqlite3 = require('sqlite3').verbose();
@@ -6,7 +7,7 @@ const { spawn } = require("child_process");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(bodyParser.json());
 app.use(express.static("public"));
 
 let currentUserId = null; 
@@ -142,6 +143,46 @@ function getInterviews(interviewType, callback) {
     });
 }
 
+app.post("/submit", (req, res) => {
+    const { companyInfo, jobInfo, extraInfo } = req.body;
+
+    // Validate required fields
+    if (!companyInfo.companyName || !jobInfo.jobName || !jobInfo.jobDate || !extraInfo.interviewDescription) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const interviewInformation = [
+        companyInfo.companyName,
+        companyInfo.companyLocation || null,
+        companyInfo.companyEmail || null,
+        companyInfo.companyIndustry || null,
+        jobInfo.jobName,
+        jobInfo.jobDate,
+        jobInfo.numInterviewers || null,
+        jobInfo.jobTime || null,
+        extraInfo.interviewDescription,
+    ];
+
+    const pythonProcess = spawn("python", ["src/createInterviewPrep.py"]);
+
+    pythonProcess.stdin.write(JSON.stringify(interviewInformation));
+    pythonProcess.stdin.end();
+
+    pythonProcess.stderr.on("data", (data) => {
+        console.error(`Python script error: ${data.toString()}`);
+    });
+
+    console.log("Data sent to Python script:", interviewInformation);
+
+    pythonProcess.on("close", (code) => {
+        if (code !== 0) {
+            console.error(`Python script exited with code ${code}`);
+        }
+    });
+
+    res.status(200).json({ message: "Interview submitted successfully", interviewId: this.lastID });
+
+});
 
 
 function closeDatabase() {

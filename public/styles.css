@@ -264,9 +264,27 @@ button {
 #company_info, #job_info, #extra_info, #verify_info, #sumbit_interview {
     grid-column: 1 / -1;
     border-top: 2px solid black;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-template-rows: auto; 
+    height: 25vh;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-#sumbit_interview {
+#interview_description {
+    grid-column: span 2; 
+}
+
+#submit_interview {
     display: flex;
     flex-direction: row;
+    grid-column: 2;
+    justify-self: center;
+    gap: 5px;
+    
+}
+
+#cancel_interview:hover, #add_interview:hover{
+    cursor: pointer;
 }
