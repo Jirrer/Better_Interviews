@@ -6,6 +6,28 @@ let OfferCount = 0;
 let PendingCount = 0;
 let RejectedCount = 0;
 
+function logOut() {
+    fetch("/api/logout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then((response) => {
+            if (response.ok) {
+                console.log("User logged out successfully.");
+                window.location.href = "/"; 
+            } else {
+                console.error("Failed to log out.");
+                alert("An error occurred while logging out. Please try again.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error logging out:", error);
+            alert("An error occurred while logging out. Please try again.");
+        });
+}
+
 function GoHome() {
     window.location.href = "/../mainPage.html"
 }
@@ -23,21 +45,11 @@ function GoToRejected() {
     window.location.href = "/rejectedPage.html";
 }
 
-function GoToNewInterview() {
+function addInterview() {
     window.location.href = "/newInterview.html";
 }
 
-function addInterview() {
-    const inputField = document.getElementById("interviewName"); 
-    const interviewName = inputField.value.trim();
     
-    if (interviewName) {
-        localStorage.setItem('interviewName', interviewName); 
-        GoToNewInterview(); 
-    } else {
-        console.error("Input is empty. Please enter a valid interview name.");
-    }
-}
 
 document.addEventListener("DOMContentLoaded", () => {
     const interviewName = localStorage.getItem('interviewName'); 
@@ -53,7 +65,6 @@ fetch("/api/user-id")
     .then((response) => response.json())
     .then((data) => {
         if (data.userId) {
-            console.log("User ID:", data.userId);
             UserId = data.userId;
         } else {
             console.error("No user ID found.");
@@ -68,9 +79,7 @@ fetch(`/api/interviewsByGenre?interviewType=${'Offered'}`)
         }
         return response.json();
     })
-    .then((data) => {
-        console.log("Total Interviews:", data.totalInterviews);
-    })
+    
     .catch((error) => {
         console.error("Error:", error);
     });
@@ -98,8 +107,6 @@ async function updateTotalInterviews() {
 
         const data = await response.json();
         const totalInterviews = data.totalInterviews; 
-
-        console.log("Total Interviews:", totalInterviews);
 
         const totalElements = document.querySelectorAll('.Total_Interviews');
         totalElements.forEach(element => {
@@ -252,7 +259,8 @@ async function updateRejects() {
                     .map(interview => `<li>${interview.date}</li>`)
                     .join('')}</ul>`;
             } else {
-                container.textContent = "No offers available.";
+                companyContainer.textContent = "No Rejects available.";
+                dateContainer.textContent = "No dates available.";
             }
         } catch (error) {
             console.error("Error updating rejects:", error);
@@ -291,7 +299,8 @@ async function updatePending() {
                     .map(interview => `<li>${interview.date}</li>`)
                     .join('')}</ul>`;
             } else {
-                container.textContent = "No offers available.";
+                companyContainer.textContent = "No Pending available.";
+                dateContainer.textContent = "No dates available.";
             }
         } catch (error) {
             console.error("Error updating pending:", error);
@@ -303,9 +312,11 @@ async function updatePending() {
 }
 
 function submitAllForms() {
+    const forbiddenCharacter = "|"; // Define the forbidden character
+
     const companyInfo = {
         companyName: document.getElementById("companyName").value.trim(),
-        companyLocation: document.getElementById("companyLocation").value.trim() || null, 
+        companyLocation: document.getElementById("companyLocation").value.trim() || null,
         companyEmail: document.getElementById("companyEmail").value.trim() || null,
         companyIndustry: document.getElementById("companyIndustry").value.trim() || null,
     };
@@ -321,9 +332,30 @@ function submitAllForms() {
         interviewDescription: document.getElementById("interview_description").value.trim(),
     };
 
+    // Validate required fields
     if (!companyInfo.companyName || !jobInfo.jobName || !jobInfo.jobDate || !extraInfo.interviewDescription) {
         alert("Please fill in all required fields.");
-        return; 
+        return;
+    }
+
+    // Check for forbidden character in all fields
+    const allFields = [
+        companyInfo.companyName,
+        companyInfo.companyLocation,
+        companyInfo.companyEmail,
+        companyInfo.companyIndustry,
+        jobInfo.jobName,
+        jobInfo.jobDate,
+        jobInfo.numInterviewers,
+        jobInfo.jobTime,
+        extraInfo.interviewDescription,
+    ];
+
+    for (const field of allFields) {
+        if (field && field.includes(forbiddenCharacter)) {
+            alert(`The character "${forbiddenCharacter}" is not allowed.`);
+            return; // Stop form submission
+        }
     }
 
     const formData = {
@@ -342,7 +374,7 @@ function submitAllForms() {
         .then((response) => {
             if (response.ok) {
                 alert("Interview submitted successfully!");
-                // window.location.href = "/mainPage.html"; //make it open that page
+                window.location.href = "/mainPage.html";
             } else {
                 alert("Failed to submit the interview. Please try again.");
             }
