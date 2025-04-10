@@ -12,6 +12,14 @@ app.use(express.static("public"));
 
 let currentUserId = null; 
 
+app.post("/api/logout", (req, res) => {
+    currentUserId = null; 
+
+    console.log("User logged out successfully.");
+    res.status(200).json({ message: "User logged out successfully." });
+});
+
+
 
 let db = new sqlite3.Database("db/better_interviews.db", (err) => {
     if (err) {
@@ -151,39 +159,49 @@ app.post("/submit", (req, res) => {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const interviewInformation = [
-        companyInfo.companyName,
-        companyInfo.companyLocation || null,
-        companyInfo.companyEmail || null,
-        companyInfo.companyIndustry || null,
-        jobInfo.jobName,
-        jobInfo.jobDate,
-        jobInfo.numInterviewers || null,
-        jobInfo.jobTime || null,
-        extraInfo.interviewDescription,
-    ];
+    if (!currentUserId) {
+        return res.status(400).json({ error: "No user logged in" });
+    }
 
+    // Structure the interview information into categories
+    const interviewInformation = [
+        `userId:${currentUserId}`,
+        `companyName:${companyInfo.companyName || ""}`,
+        `companyLocation:${companyInfo.companyLocation || ""}`,
+        `companyEmail:${companyInfo.companyEmail || ""}`,
+        `companyIndustry:${companyInfo.companyIndustry || ""}`,
+        `jobName:${jobInfo.jobName || ""}`,
+        `jobDate:${jobInfo.jobDate || ""}`,
+        `numInterviewers:${jobInfo.numInterviewers || ""}`,
+        `jobTime:${jobInfo.jobTime || ""}`,
+        `interviewDescription:${extraInfo.interviewDescription || ""}`
+    ].join("|");
+
+    console.log("Sending structured data to Python script:");
+
+    // Spawn the Python process
     const pythonProcess = spawn("python", ["src/createInterviewPrep.py"]);
 
-    pythonProcess.stdin.write(JSON.stringify(interviewInformation));
+    // Send the structured data to the Python script via stdin
+    pythonProcess.stdin.write(interviewInformation);
     pythonProcess.stdin.end();
 
+    // Handle errors from the Python script
     pythonProcess.stderr.on("data", (data) => {
         console.error(`Python script error: ${data.toString()}`);
     });
 
-    console.log("Data sent to Python script:", interviewInformation);
-
+    // Wait for the Python script to finish
     pythonProcess.on("close", (code) => {
         if (code !== 0) {
             console.error(`Python script exited with code ${code}`);
+            return res.status(500).json({ error: "Python script failed to execute." });
         }
+
+        console.log("Python script executed successfully.");
+        res.status(200).json({ message: "Interview submitted successfully!" });
     });
-
-    res.status(200).json({ message: "Interview submitted successfully", interviewId: this.lastID });
-
 });
-
 
 function closeDatabase() {
     console.log("Closing Database...");

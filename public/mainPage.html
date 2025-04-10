@@ -10,8 +10,8 @@
 <body>
     <div id = "Top_Bar">
         <p></p>
-        <button type="button" onclick="toOptions()">
-            <div id = "Options"><img src="svg/options.svg"width="30" height="30"></div>
+        <button type="button" id = "logoutButton" onclick = "logOut()">
+            <img src = "svg/logout.svg" style="width: 35px; height: 35px;">
         </button>
         <button type="button" onclick="toSettings()">
             <div id = "Settings"><img src="svg/settings.svg"width="30" height="30"></div>
@@ -21,9 +21,8 @@
         </button>
     </div>
     <div id = "Add_Interview">
-        <input type="text" id="interviewName" placeholder="Add Interview">
         <button type="button" onclick="addInterview()">
-            <img src="svg/add.svg"width="40" hieght ="40">
+            <img src="svg/add.svg"width="50" hieght ="50">
         </button>
     </div>
     <div id = "Display_TimeFrame"><p>Last 30 Days</p></div>

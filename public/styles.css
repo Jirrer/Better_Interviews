@@ -80,14 +80,7 @@ body button :hover {
     flex-direction: row;
     align-items: center; 
     justify-self: end;
-    margin-right: 2px;
-}
-
-#Add_Interview input {
-    margin: auto;
-    font-size: 24px;
-    font-family: 'Inter';
-    font-weight: 100;
+    margin-right: 3px;
 }
 
 #Side_Panel {
