@@ -1,11 +1,10 @@
 import sys
-import json
 import sqlite3
 import google.generativeai as genai
+from dotenv import load_dotenv
 import os
 
-#to do
-# make env, make it add other infomraiton with the description
+load_dotenv()
 
 def updateDb(info):
         connection = sqlite3.connect("db/better_interviews.db")
@@ -16,7 +15,6 @@ def updateDb(info):
         VALUES (?, ?, ?,?,?)
         """, (info[0], "Pending", info[1], info[2], info[3])) 
 
-
         connection.commit()
         connection.close()
 
@@ -25,7 +23,7 @@ def getLLM_response(info):
         print("Error: No data provided to LLM.")
         return "No response generated."
     
-    genai.configure(api_key="AIzaSyBakuPnIa9RO3cCQoZVvoJh846zjhCuVVE") # make env
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
     model = genai.GenerativeModel('gemini-2.0-flash')
 
@@ -42,16 +40,15 @@ def getLLM_response(info):
     description of the role/company: \n
     {info[8]}
     '''
+
     response = model.generate_content(prompt)
 
     return response.text  
     
-
 def parseData(data, find):
     searchIndex = 0
     foundIndex = 0
     endIndex = len(data)
-    foundCat = False
 
     for x in range(len(data) - 1):
         if searchIndex < len(find):
@@ -68,36 +65,31 @@ def parseData(data, find):
 
         elif data[x] == '|':
             endIndex = x
-            break
-         
+            break 
 
     return data[foundIndex + 3:endIndex]
-
 
 if __name__ == "__main__":
     try:
         interviewData = sys.stdin.read()
 
-        userId = parseData(interviewData,"userId")
-        companyName = parseData(interviewData, "companyName")
-        jobLocation = parseData(interviewData, "companyLocation")
-        jobEmail = parseData(interviewData, "companyEmail")
-        jobIndustry = parseData(interviewData, "companyIndustry")
-        jobName = parseData(interviewData, "jobName")
-        jobDate = parseData(interviewData, "jobDate")
-        numInterviewers = parseData(interviewData, "numInterviewers")
-        jobTime = parseData(interviewData,"jobTime")
-        interviewDescription = parseData(interviewData, "interviewDescription")
-        
-        interviewInformation = [companyName, jobLocation, jobEmail, jobIndustry, jobName, jobDate, numInterviewers, jobTime, interviewDescription, userId]
+        interviewInformation = [
+            parseData(interviewData, "companyName"), 
+            parseData(interviewData, "companyLocation"), 
+            parseData(interviewData, "companyEmail"), 
+            parseData(interviewData, "companyIndustry"), 
+            parseData(interviewData, "jobName"), 
+            parseData(interviewData, "jobDate"), 
+            parseData(interviewData, "numInterviewers"), 
+            parseData(interviewData,"jobTime"), 
+            parseData(interviewData, "interviewDescription"), 
+            parseData(interviewData,"userId")
+        ]
         
         LLM_response = getLLM_response(interviewInformation)
-
-        informationToSubmit = [interviewInformation[9], interviewInformation[0], interviewInformation[5], LLM_response]
         
-        updateDb(informationToSubmit)
+        updateDb([interviewInformation[9], interviewInformation[0], interviewInformation[5], LLM_response])
 
     except Exception as e:
-        # Log any errors to stderr
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
