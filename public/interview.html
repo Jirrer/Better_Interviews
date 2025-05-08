@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview</title>
+    <link rel = "stylesheet" href = "styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="interviewTitle">
+        <button type="button" id = "returnButton" onclick = "goBack()">
+            <img src = "svg/back.svg" style="width: 50px; height: 50px;">
+        </button>
+        <div id="company_Name">Company Name</div>
+    </div>
+    <div id="interviewDate">MM/DD/YY</div>
+    <div id="interviewLeft">left</div>
+    <div id="interviewMiddle">middle</div>
+    <div id="interviewRight">right</div>
+
+    <script>
+        const interview = JSON.parse(localStorage.getItem("selectedInterview"));
+
+        if (interview) {
+        document.title = `Interview - ${interview.companyName}`;
+        document.getElementById('company_Name').textContent = interview.companyName;
+        document.getElementById('interviewDate').textContent = interview.date;
+        document.getElementById('interviewLeft').textContent = interview.description;
+
+        } else {
+        console.log("No interview data found.");
+        }
+    </script>
+    
+    <script src = "script.js"></script>
+</body>
+</html>

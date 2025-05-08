@@ -131,7 +131,7 @@ app.get("/api/interviewsByGenre", (req, res) => {
 
 function getInterviews(interviewType, callback) {
     const query = `
-        SELECT interviews.company_name, interviews.date
+        SELECT interviews.company_name, interviews.date, status, description
         FROM interviews
         JOIN users ON interviews.user_id = users.id
         WHERE users.id = ? AND interviews.status = ?;
@@ -144,7 +144,10 @@ function getInterviews(interviewType, callback) {
         } else {
             const interviews = rows.map(row => ({
                 companyName: row.company_name,
-                date: row.date
+                date: row.date,
+                status: row.status,
+                id: row.id,
+                description: row.description
             }));
             callback(null, interviews);
         }

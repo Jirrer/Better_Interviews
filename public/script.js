@@ -49,17 +49,11 @@ function addInterview() {
     window.location.href = "/newInterview.html";
 }
 
-    
+function goBack() {
+    window.history.back();
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-    const interviewName = localStorage.getItem('interviewName'); 
-    if (interviewName) {
-        const container = document.getElementById('interview_name');
-        container.innerHTML = interviewName; 
-    } else {
-        console.error("No interview name found in localStorage.");
-    }
-});
+    
 
 fetch("/api/user-id")
     .then((response) => response.json())
@@ -207,17 +201,36 @@ async function updateOffers() {
             const data = await response.json(); // Parse the JSON response
             const interviews = data.interviews; // Extract the list of interviews
 
+            localStorage.setItem("interviews", JSON.stringify(interviews));
+
+
             // Update the content of the containers with the fetched data
             if (interviews.length > 0) {
                 // Populate company names
-                companyContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.companyName}</li>`)
-                    .join('')}</ul>`;
+                companyContainer.innerHTML = `
+                <ul style="list-style: none; padding: 0;">
+                    ${interviews
+                    .map(interview => `
+                        <li>
+                        <button 
+                            class="company-btn" 
+                            onclick='viewInterview(JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(interview))}")))'
+                            style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
+                            ${interview.companyName}
+                        </button>
+                        </li>
+                    `)
+                    .join('')}
+                </ul>`;
 
                 // Populate dates
                 dateContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.date}</li>`)
+                    .map(interview => 
+                        `<li>${interview.date}
+                        <button id="offeredEdit" data-id="${interview.id}"><img src="svg/edit.svg" width="20" height="20" /></button>
+                        </li>`)
                     .join('')}</ul>`;
+
             } else {
                 companyContainer.textContent = "No offers available.";
                 dateContainer.textContent = "No dates available.";
@@ -248,16 +261,34 @@ async function updateRejects() {
             const data = await response.json(); // Parse the JSON response
             const interviews = data.interviews; // Extract the list of interview names
 
+            localStorage.setItem("interviews", JSON.stringify(interviews));
+
             // Update the content of the container with the fetched data
             if (interviews.length > 0) {
-                companyContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.companyName}</li>`)
-                    .join('')}</ul>`;
+                companyContainer.innerHTML = `
+                <ul style="list-style: none; padding: 0;">
+                    ${interviews
+                    .map(interview => `
+                        <li>
+                        <button 
+                            class="company-btn" 
+                            onclick='viewInterview(JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(interview))}")))'
+                            style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
+                            ${interview.companyName}
+                        </button>
+                        </li>
+                    `)
+                    .join('')}
+                </ul>`;
 
                 // Populate dates
                 dateContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.date}</li>`)
+                    .map(interview => 
+                        `<li>${interview.date}
+                        <button id="rejectedEdit" data-id="${interview.id}"><img src="svg/edit.svg" width="20" height="20" /></button>
+                        </li>`)
                     .join('')}</ul>`;
+
             } else {
                 companyContainer.textContent = "No Rejects available.";
                 dateContainer.textContent = "No dates available.";
@@ -287,20 +318,38 @@ async function updatePending() {
             const data = await response.json(); // Parse the JSON response
             const interviews = data.interviews; // Extract the list of interview names
 
+            localStorage.setItem("interviews", JSON.stringify(interviews));
 
-            // Update the content of the container with the fetched data
+
             if (interviews.length > 0) {
-                companyContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.companyName}</li>`)
+                // Interviews
+                companyContainer.innerHTML = `
+                <ul style="list-style: none; padding: 0;">
+                    ${interviews
+                    .map(interview => `
+                        <li>
+                        <button 
+                            class="company-btn" 
+                            onclick='viewInterview(JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(interview))}")))'
+                            style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">
+                            ${interview.companyName}
+                        </button>
+                        </li>
+                    `)
+                    .join('')}
+                </ul>`;
+
+                // Dates
+                dateContainer.innerHTML = `<ul>${interviews
+                    .map(interview => 
+                        `<li>${interview.date}
+                        <button id="pendingEdit" data-id="${interview.id}"><img src="svg/edit.svg" width="20" height="20" /></button>
+                        </li>`)
                     .join('')}</ul>`;
 
-                // Populate dates
-                dateContainer.innerHTML = `<ul>${interviews
-                    .map(interview => `<li>${interview.date}</li>`)
-                    .join('')}</ul>`;
+                    
             } else {
                 companyContainer.textContent = "No Pending available.";
-                dateContainer.textContent = "No dates available.";
             }
         } catch (error) {
             console.error("Error updating pending:", error);
@@ -387,6 +436,17 @@ function submitAllForms() {
 
 function cancelInterview() {
     GoHome();
+}
+
+function viewInterview(interview) {
+    if (interview) {  
+        localStorage.setItem("selectedInterview", JSON.stringify(interview));
+        
+        window.location.href = "/interview.html";
+      
+    } else {
+      console.log("Interviews not found");
+    }
 }
 
 updateCharts();

@@ -28,7 +28,7 @@ def getLLM_response(info):
     model = genai.GenerativeModel('gemini-2.0-flash')
 
     prompt = f'''
-    I am preparing for a job interview. I want you to give me a study guide/prep based off of the following job description: \n
+    I am preparing for a job interview. I want you to give me a study guide/prep based off of the following job description. just give me the interview prep and nothing else. \n
     company name = {info[0]}
     company location = {info[1]}
     company email = {info[2]}
